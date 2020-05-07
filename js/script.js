@@ -1,5 +1,4 @@
 
-
 //get the DOM elements
 const studentList = document.getElementsByClassName('student-item cf');
 const studentItem = studentList.children;
@@ -53,6 +52,21 @@ function appendPageLinks(list) {
     link.addEventListener('click', (e) => {
       showPage(list, i);
     })
+
+//highlights the current page
+    if (link.textContent == 1) {
+      link.className = 'active'
+    };
+
+    link.addEventListener('click', (e) => {
+      const currentPage = e.target.textContent;
+      const a = document.querySelectorAll('a');
+      showPage(list, currentPage);
+      for (let i = 0; i < a.length; i++) {
+        a[i].className = '';
+      }
+      e.target.className = 'active';
+    });
   }
 };
 
