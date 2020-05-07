@@ -9,7 +9,6 @@ const pagination = document.createElement('div');
 pagination.className = ("pagination");
 
 // this function limits how many items will be shown each page
-
 var showPage = (list, page) => {
 
   let indexFirst = (page * numItems) - numItems;
@@ -17,7 +16,7 @@ var showPage = (list, page) => {
 
   for (let i = 0; i < list.length; i++) {
     if (i >= indexFirst && i <= indexLast) {
-      list[i].style.display = ('block');
+      list[i].style.display = ('');
     }
       else {
         list[i].style.display = ('none');
@@ -36,7 +35,7 @@ showPage(studentList, 1);
 // create and add the links for the pagination
 function appendPageLinks(list) {
 
-  let numPages = Math.ceil(list.length/10); //gets the number of pages needed
+  let numPages = Math.ceil(list.length/numItems); //gets the number of pages needed
   let ul = document.createElement('ul');
 
   divPage.appendChild(pagination);
@@ -66,7 +65,7 @@ const divSearch = document.createElement('div');
 const input = document.createElement('input');
 const searchButton = document.createElement('button');
 const studentName = document.getElementsByTagName('h3');
-const filteredList = [];
+
 divSearch.className = ('student-search');
 input.placeholder = "Search for students...";
 searchButton.textContent = 'Search';
@@ -75,27 +74,48 @@ document.querySelector('.page-header').appendChild(divSearch);
 divSearch.appendChild(input);
 divSearch.appendChild(searchButton);
 
+//create and hide the "no results" message
+noResults = document.createElement('h2');
+noResults.textContent = 'Sorry, no results have been found.';
+divPage.appendChild(noResults);
+noResults.style.display = ('none');
+
 //function filters the list and hides the rest of the items
 function searchStudent() {
-  for (let x = 0; x < studentList.length; x++) {
-    if (studentName[x].innerHTML.includes(input.value.toLowerCase())) {
-      studentList[x].style.display = ('block')
-      filteredList.push(studentList[x].parentNode.parentNode);
 
+  noResults.style.display = ('none');
+  const filteredList = [];
+  for (let x = 0; x < studentList.length; x++) {
+
+    if (studentName[x].innerHTML.includes(input.value.toLowerCase())) {
+      studentList[x].style.display = ('')
+      filteredList.push(studentName[x].parentNode.parentNode);
     }
       else {
         studentList[x].style.display = ('none');
-
       }
   }
 
+//show "no results" message if there is no matched item
+  if (filteredList.length == 0) {
+    noResults.style.display = ('');
+  }
+
   reset();
-  console.log(filteredList.length);
   showPage(filteredList, 1);
   appendPageLinks(filteredList);
-
 };
 
+input.addEventListener('keyup', (e) => {
+    e.preventDefault();
+    if (input.value != '') {
+       searchStudent();
+    } else {
+       reset();
+       showPage(studentList, 1);
+       appendPageLinks(studentList)
+    }
+ });
 
 searchButton.addEventListener('click', (e) => {
   e.preventDefault();
